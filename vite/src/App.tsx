@@ -74,7 +74,7 @@ const App: FC = () => {
 
   const onChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      if (!e.currentTarget.files) return;
+      if (!e.currentTarget.files || !contract) return;
 
       const formData = new FormData();
 
@@ -84,7 +84,11 @@ const App: FC = () => {
 
       const metadataUrl = await uploadMetadata(imageUrl!);
 
-      console.log(metadataUrl);
+      const tx = await contract.mintNft(metadataUrl);
+
+      await tx.wait();
+
+      console.log(tx);
     } catch (error) {
       console.error(error);
     }
