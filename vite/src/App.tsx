@@ -41,6 +41,37 @@ const App: FC = () => {
     }
   };
 
+  const uploadMetadata = async (image: string) => {
+    try {
+      const metadata = JSON.stringify({
+        pinataContent: {
+          name: "Test",
+          description: "Test",
+          image,
+        },
+        pinataMetadata: {
+          name: "test.json",
+        },
+      });
+
+      const response = await axios.post(
+        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        metadata,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            pinata_api_key: import.meta.env.VITE_PINATA_KEY,
+            pinata_secret_api_key: import.meta.env.VITE_PINATA_SECRET,
+          },
+        }
+      );
+
+      return `https://slime-project.mypinata.cloud/ipfs/${response.data.IpfsHash}`;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
       if (!e.currentTarget.files) return;
@@ -51,7 +82,9 @@ const App: FC = () => {
 
       const imageUrl = await uploadImage(formData);
 
-      console.log(imageUrl);
+      const metadataUrl = await uploadMetadata(imageUrl!);
+
+      console.log(metadataUrl);
     } catch (error) {
       console.error(error);
     }
