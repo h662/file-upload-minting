@@ -118,7 +118,15 @@ const App: FC = () => {
       {signer ? (
         <>
           <Text>{signer.address}</Text>
-          <input type="file" onChange={onChangeFile} />
+          <input
+            style={{ display: "none" }}
+            id="file"
+            type="file"
+            onChange={onChangeFile}
+          />
+          <label htmlFor="file">
+            <Text>민팅</Text>
+          </label>
         </>
       ) : (
         <Button onClick={onClickMetamask}>🦊 로그인</Button>
